@@ -1,6 +1,7 @@
 package SecurityConfig.jwtUtils;
 
 
+import SecurityConfig.User.UserEntity;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -27,17 +28,26 @@ public class jwtUtils {
         return Keys.
                 hmacShaKeyFor(Decoders.BASE64.decode(jwtSecret));
 }
- String generateJwt(UserDetails userDetails) {
-       List< String> roles = userDetails.getAuthorities()
+public String AccessToken(UserEntity user) {
+       List< String> roles = user.getAuthorities()
                 .stream()
                 .map(GrantedAuthority::getAuthority)
                 .toList();
 return Jwts.builder()
-        .subject(userDetails.getUsername())
+        .subject(user.getUsername())
         .issuedAt(new Date())
         .expiration(new Date(System.currentTimeMillis()+1000*60))
         .signWith(signingKey())
         .compact();
+
+    }
+    public String RefreshToken(UserEntity user) {
+        return Jwts.builder()
+                .subject(user.getUsername())
+                .issuedAt(new Date())
+                .expiration(new Date(System.currentTimeMillis()+1000L *60*60*24*30*6))
+                .signWith(signingKey())
+                .compact();
 
     }
     public String getJwtFromHeader(HttpServletRequest request) {
