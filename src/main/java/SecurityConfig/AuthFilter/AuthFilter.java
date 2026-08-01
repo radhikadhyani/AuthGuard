@@ -1,6 +1,6 @@
 package SecurityConfig.AuthFilter;
 
-import SecurityConfig.Service.CustomDetailsService;
+import SecurityConfig.Service.CustomUserDetailsService;
 import SecurityConfig.jwtUtils.jwtUtils;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
@@ -24,7 +24,7 @@ public class AuthFilter extends OncePerRequestFilter {
     @Autowired
     private jwtUtils jwtUtils;
 @Autowired
-private CustomDetailsService customDetailsService;
+private CustomUserDetailsService customDetailsService;
     private static final Logger logger=  LoggerFactory.getLogger(AuthFilter.class);
 
     @Override

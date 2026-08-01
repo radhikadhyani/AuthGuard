@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ResponseDto {
-    private String token;
-    private String type = "Bearer";
+public class RegisterResponseDto {
+    private String Username;
 }

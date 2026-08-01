@@ -5,19 +5,18 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Table (name="CheckUsers")
-public class UserEntity {
+public class UserEntity implements UserDetails {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(unique=true, nullable=false)
@@ -28,22 +27,18 @@ public class UserEntity {
     private String middleName;
     @Column
     private String lastName;
-    @Column
-    public String getFullName() {
-        return Stream.of(firstName, middleName, lastName)
-                .filter(Objects::nonNull)
-                .filter(s -> !s.isBlank())
-                .collect(Collectors.joining(" "));
-    }
     @Column(unique=true, nullable=false)
     private String username;
     @Column( nullable=false)
     private String password;
     @Column(unique=true, nullable=false)
     private String email;
-
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Role role;
+    @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+        return List.of(new SimpleGrantedAuthority(role.name()));
     }
 @Column
     private boolean enabled=true;
