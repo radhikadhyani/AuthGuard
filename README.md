@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🔐 Spring Security 6 - JWT Authentication
+# 🔐 AuthGuard - JWT Authentication
 
 <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=600&size=26&pause=1000&color=6DB33F&center=true&vCenter=true&width=850&lines=Spring+Security+6+%7C+JWT+Authentication;Secure+REST+APIs+with+Spring+Boot;Access+%26+Refresh+Token+Authentication;Building+Production-Ready+Backend+Applications" alt="Typing SVG"/>
 
