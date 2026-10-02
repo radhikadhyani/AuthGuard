@@ -31,9 +31,9 @@ private CustomUserDetailsService customDetailsService;
     protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
     logger.debug("doFilterInternal");
    try {
-       String jwt = parseJwt(httpServletRequest);
-       if (jwt != null && jwtUtils.validateJwt(jwt)) {
-           String username = jwtUtils.getUsernameFromJwt(jwt);
+       String refreshToken = parseJwt(httpServletRequest);
+       if (refreshToken != null && jwtUtils.validaterefreshToken(refreshToken)) {
+           String username = jwtUtils.getUsernameFromrefreshToken(refreshToken);
            UserDetails userDetails = customDetailsService.loadUserByUsername(username);
            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                    userDetails, null, userDetails.getAuthorities());

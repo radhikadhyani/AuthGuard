@@ -59,7 +59,7 @@ public class UsernameGenerator {
         List<String> username = generateUsernames(firstName, middleName, lastName);
 
         for (String users : username) {
-            if (!repo.existbyUsername(users)) {
+            if (!repo.existsByUsername(users)) {
                 return users;
             }
         }
@@ -73,7 +73,7 @@ public class UsernameGenerator {
             String username = base +
                     ThreadLocalRandom.current().nextInt(1000, 10000);
 
-            if (!repo.existbyUsername(username)) {
+            if (!repo.existsByUsername(username)) {
                 return username;
             }
         }

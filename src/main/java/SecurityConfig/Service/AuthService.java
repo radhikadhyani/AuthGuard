@@ -8,11 +8,13 @@ import SecurityConfig.User.Role;
 import SecurityConfig.User.UserEntity;
 import SecurityConfig.UserRepository.repo;
 import SecurityConfig.jwtUtils.jwtUtils;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +27,7 @@ private repo repo;
   private final AuthenticationManager authenticationManager;
   private final mapper mapper;
 private final jwtUtils jwtUtils;
-private UsernameGenerator usernamGenerator;
+private UsernameGenerator usernameGenerator;
 private final CustomUserDetailsService customUserDetailsService;
     public RegisterResponseDto RegisterUser(RegisterDto registerDto) throws RuntimeException {
         if(repo.findByUsername(registerDto.getUsername()).isPresent()){
@@ -37,7 +39,7 @@ private final CustomUserDetailsService customUserDetailsService;
           UserEntity userEntity = mapper.mappedEntity(registerDto);
         userEntity.setPassword(encoder.encode(registerDto.getPassword()));
         userEntity.setRole(Role.ROLE_USER);
-        userEntity.setUsername(usernamGenerator.UsernameBuilder(registerDto.getFirstName(), registerDto.getMiddleName(), registerDto.getLastName()));
+        userEntity.setUsername(usernameGenerator.UsernameBuilder(registerDto.getFirstName(), registerDto.getMiddleName(), registerDto.getLastName()));
 
         UserEntity savedEntity = repo.save(userEntity);
         return new RegisterResponseDto(registerDto.getUsername());
@@ -53,18 +55,20 @@ private final CustomUserDetailsService customUserDetailsService;
         String refreshToken = jwtUtils.createRefreshToken(user);
         LoginResponseDto loginResponseDto = new LoginResponseDto();
         loginResponseDto.setUsername(user.getUsername());
-        loginResponseDto.setAccesstoken(accessToken);
-        loginResponseDto.setRefreshtoken(refreshToken);
+        loginResponseDto.setAccessToken(accessToken);
+        loginResponseDto.setRefreshToken(refreshToken);
         loginResponseDto.setType("Bearer");
         loginResponseDto.setRole(user.getRole().name());
         return loginResponseDto;
     }
  public LoginResponseDto refreshToken(String refreshToken) {
-        jwtUtils.validateRefreshToken(refreshToken);
-String username=jwtUtils.getUsernameFromToken(refreshToken);
-String NewaccessToken= jwtUtils.createAccessToken(customUserDetailsService.loadUserByUsername(username));
+        jwtUtils.validaterefreshToken(refreshToken);
+        String username=jwtUtils.getUsernameFromrefreshToken(refreshToken);
+     UserDetails userDetails =
+             customUserDetailsService.loadUserByUsername(username);
+     String NewAccessToken= jwtUtils.createAccessToken(userDetails);
 LoginResponseDto loginResponseDto = new LoginResponseDto();
-loginResponseDto.setAccesstoken(NewaccessToken);
+loginResponseDto.setAccessToken(NewAccessToken);
 return loginResponseDto;
  }
 
